@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+    @keyframes accurate {
+      from { transform: rotateY(-180deg) scale3d(1, 1, 1); opacity: 1; }
+      25% { transform: rotateY(-180deg) scale3d(1.1, 1.1, 1.1); opacity: 1; }
+      to { transform: rotateY(-180deg) scale3d(1, 1, 1); opacity: 0; }
+    }
+    .accurate .card__content {
+      animation: accurate 1.3s ease-in-out forwards;
+    }
+}
+  
