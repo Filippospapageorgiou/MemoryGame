@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { writable } from 'svelte/store';
+  import { get, writable } from 'svelte/store';
   import { goto } from "$app/navigation";
   import Authcheck from '$lib/components/Authcheck.svelte';
   import { userStore } from '$lib/Entities/User';
@@ -7,7 +7,7 @@
   import { client } from '$lib';
   
 
-  
+  console.log(get(userStore));
 
   // Define card types
   interface Card {
