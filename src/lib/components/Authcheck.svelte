@@ -1,23 +1,13 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { userStore } from '$lib/Entities/User';
-  
-    let isAuthenticated: boolean = false;
-  
-    // Subscription to authStore to check user authentication status
-    const unsubscribe = userStore.subscribe(($userStore) => {
-      isAuthenticated = $userStore.username !== null;
-    });
-  
-    onMount(() => {
-      return () => {
-        unsubscribe();
-      };
-    });
+    import { userStore } from "$lib/Entities/User";
 </script>
   
-{#if isAuthenticated}
+{#if $userStore.username}
   <slot />
 {:else}
-  <p>You are not authenticated.</p>
+<div class="flex justify-center items-center min-h-screen bg-gradient-to-br from-orange-500 to-pink-600">
+  <div class="bg-white p-8 rounded-lg shadow-lg">
+    <h1 class="text-center text-pink-600 mb-6">You have to be Loged in to PLay Thanks!!</h1>
+  </div>
+</div>
 {/if}
