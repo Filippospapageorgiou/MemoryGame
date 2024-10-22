@@ -132,10 +132,6 @@
             sql: "INSERT INTO score (time,attempts,username) VALUES (?, ?,?)",
             args: [timeSumbit , attemptsSumbit , usernameSumbit]
         });
-        
-        console.log('Data saved');
-
-        // Call startGame or other logic based on success
         startGame();
       } catch (error:any) {
         console.error('Fetch error:', error.message);

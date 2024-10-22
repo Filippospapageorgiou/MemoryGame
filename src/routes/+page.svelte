@@ -1,51 +1,53 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { client } from '$lib';
-  import { userStore } from '$lib/Entities/User';
-  let username: string = "";
-  let password: string = "";
+  import { enhance } from "$app/forms";
+  import { goto } from "$app/navigation";
+  import { userStore } from "$lib/Entities/User";
+  import type { ActionResult } from "@sveltejs/kit";
 
-  async function handleSubmit(event: Event) {
-    event.preventDefault();
-    const isAuthenticated = await authenticate(username, password);
+  
 
-    if (isAuthenticated) {
-      goto("/game");
-    } else {
-      alert("Invalid username or password");
-    }
+  interface User {
+    username: string | undefined;
+    password: string | undefined;
   }
 
-  async function authenticate(username: string, password: string): Promise<boolean> {
-    try {
-      const result = await client.execute({
-        sql: "SELECT * FROM user WHERE username = ? AND password = ?",
-        args: [username, password]
-      });
-      const user = {
-        username: username || undefined,
-        password: password || undefined
+  let user: User = {
+    username: undefined,
+    password: undefined,
+  };
+
+  let error = '';
+
+  function handleSubmit(){
+    return async ({ result }: { result: ActionResult }) => {
+      if (result.type === 'success') {
+        userStore.setUser(user);
+        goto('/game');
+      } else if (result.type === 'failure') {
+        error = result.data?.message || 'Login failed';
+        userStore.setUser(user);
       }
-      userStore.setUser(user);
-      return result.rows.length > 0;
-    } catch (error) {
-      console.error('Database query failed:', error);
-      return false;
-    }
-  }
+    };
+  };
+
 </script>
 
 <div class="flex justify-center items-center min-h-screen bg-gradient-to-br from-orange-500 to-pink-600">
   <div class="bg-white p-8 rounded-lg shadow-lg">
-    <h1 class="text-center text-pink-600 mb-6">Login-In To Play Card Game</h1>
-    <form on:submit={handleSubmit}>
-      <input name="username" type="text" bind:value={username} placeholder="username" class="input w-full border-2 rounded p-2 focus:outline-none focus:border-orange-500" required>
-      <input name="password" type="password" bind:value={password} placeholder="password" class="input w-full border-2 rounded p-2 focus:outline-none focus:border-orange-500" required>
+    <h1 class="text-center text-pink-600 mb-6">Login To Play Card Game</h1>
+    <form method="post" use:enhance={handleSubmit}>
+      <input name="username" type="text" bind:value={user.username} placeholder="username" class="input w-full border-2 rounded p-2 mb-4 focus:outline-none focus:border-orange-500" required>
+      <input name="password" type="password" bind:value={user.password} placeholder="password" class="input w-full border-2 rounded p-2 mb-4 focus:outline-none focus:border-orange-500" required>
+      {#if error}
+        <p class="text-red-500 mb-4">{error}</p>
+      {/if}
       <div class="text-center text-pink-600 mb-6">
-        <span>Don't Have an account</span>
-        <a href="/signup" class="ml-2 no-underline text-orange-500 hover:underline hover:opacity-80">Sign-in</a>
+        <span>Don't Have an account?</span>
+        <a href="/signup" class="ml-2 no-underline text-orange-500 hover:underline hover:opacity-80">Sign up</a>
       </div>
-      <input type="submit" value="Login-In" class="w-full p-2 rounded bg-gradient-to-br from-orange-500 to-pink-600 text-white cursor-pointer hover:opacity-90">
+      <button type="submit" class="w-full p-2 rounded bg-gradient-to-br from-orange-500 to-pink-600 text-white cursor-pointer hover:opacity-90">
+        Login
+      </button>
     </form>
   </div>
 </div>

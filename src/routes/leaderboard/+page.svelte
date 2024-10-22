@@ -9,8 +9,16 @@
 </svelte:head>
 
 <div class="flex flex-col min-h-screen bg-gradient-to-br from-custom-orange to-custom-pink font-sans text-2xl">
-    <header class="flex justify-around items-center p-5 h-11 bg-white shadow-lg">
+    <header class="flex justify-between items-center p-5 h-11 bg-white shadow-lg">
+        <a 
+            href="/game" 
+            class="px-4 py-2 rounded bg-gradient-to-br from-orange-500 to-pink-600 
+                   text-white text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+            ← GAME
+        </a>
         <h2 class="text-custom-pink text-4xl">Leaderboard</h2>
+        <div class="w-[104px]"></div> <!-- Spacer to center the title -->
     </header>
     
     <main class="flex flex-grow justify-center p-5">
